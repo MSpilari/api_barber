@@ -4,7 +4,7 @@ import { v2 as cloudinary } from 'cloudinary'
 import { bufferToDataURI } from '../utils/bufferToDataURI'
 
 const AddBarber = async (req: Request, res: Response) => {
-    const barberImage = bufferToDataURI(req)?.content
+    const barberImage = bufferToDataURI(req)
     const { name, password } = req.body
 
     if (barberImage) {
