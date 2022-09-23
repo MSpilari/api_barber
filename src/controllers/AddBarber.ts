@@ -3,17 +3,25 @@ import { prismaClient } from '../prismaClient'
 import { v2 as cloudinary } from 'cloudinary'
 import { bufferToDataURI } from '../utils/bufferToDataURI'
 import { hash } from 'bcrypt'
+import { hoursToMinutes } from '../utils/hoursToMinutes'
 
 const AddBarber = async (req: Request, res: Response) => {
     const barberImage = bufferToDataURI(req)
-    const { email, password, appointments } = req.body
+    const { email, password, appointments, startedAt, endAt } = req.body
     const hashPassword = await hash(password, 10)
 
     const emailAlreadyExists = await prismaClient.barber.findFirst({
         where: { email }
     })
 
-    if (!email || !password || !appointments || !barberImage)
+    if (
+        !email ||
+        !password ||
+        !appointments ||
+        !barberImage ||
+        !startedAt ||
+        !endAt
+    )
         throw new Error('Sorry, some fields are missing.')
 
     if (emailAlreadyExists)
@@ -32,7 +40,9 @@ const AddBarber = async (req: Request, res: Response) => {
                 email,
                 password: hashPassword,
                 avatarUrl: avatarPicURL,
-                appointments
+                appointments,
+                startedAt: hoursToMinutes(startedAt),
+                endAt: hoursToMinutes(endAt)
             }
         })
 
