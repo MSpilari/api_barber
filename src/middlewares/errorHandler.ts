@@ -6,7 +6,10 @@ const errorHandler = (
     res: Response,
     next: NextFunction
 ) => {
-    return res.status(500).json({ err: error.name, errMessage: error.message })
+    return res.status(500).json({
+        errPath: `Error occurred on a call to ${req.url}`,
+        errMessage: error.message
+    })
 }
 
 export { errorHandler }
