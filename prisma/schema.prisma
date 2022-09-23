@@ -16,5 +16,7 @@ model Barber {
   password     String
   avatarUrl    String
   appointments String
+  startedAt    Int
+  endAt        Int
   createdAt    DateTime @default(now())
 }
