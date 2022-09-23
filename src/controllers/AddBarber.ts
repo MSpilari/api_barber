@@ -6,7 +6,7 @@ import { hash } from 'bcrypt'
 
 const AddBarber = async (req: Request, res: Response) => {
     const barberImage = bufferToDataURI(req)
-    const { email, password } = req.body
+    const { email, password, appointments } = req.body
     const hashPassword = await hash(password, 10)
 
     const emailAlreadyExists = await prismaClient.barber.findFirst({
@@ -18,15 +18,18 @@ const AddBarber = async (req: Request, res: Response) => {
 
     if (barberImage && !emailAlreadyExists) {
         const avatarPic = await cloudinary.uploader.upload(barberImage, {
-            folder: 'barbers avatar'
+            folder: 'barbers avatar',
+            public_id: email
         })
+
         const avatarPicURL = avatarPic.url
+
         await prismaClient.barber.create({
             data: {
                 email,
                 password: hashPassword,
                 avatarUrl: avatarPicURL,
-                appointments: '12345'
+                appointments
             }
         })
 
