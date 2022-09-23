@@ -13,6 +13,9 @@ const AddBarber = async (req: Request, res: Response) => {
         where: { email }
     })
 
+    if (!email || !password || !appointments || !barberImage)
+        throw new Error('Sorry, some fields are missing.')
+
     if (emailAlreadyExists)
         throw new Error('Sorry, this email is already in use.')
 
