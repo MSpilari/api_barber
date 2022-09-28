@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { prismaClient } from '../prismaClient'
+import { prismaClient } from '../configs/prismaClient'
 import { v2 as cloudinary } from 'cloudinary'
 import { bufferToDataURI } from '../utils/bufferToDataURI'
 import { hash } from 'bcrypt'
@@ -22,10 +22,14 @@ const AddBarber = async (req: Request, res: Response) => {
         !startedAt ||
         !endAt
     )
-        throw new Error('Sorry, some fields are missing.')
+        return res
+            .status(400)
+            .json({ error: 'Sorry, some fields are missing !' })
 
     if (emailAlreadyExists)
-        throw new Error('Sorry, this email is already in use.')
+        return res
+            .status(400)
+            .json({ error: 'Sorry, this email is already in use.' })
 
     if (barberImage && !emailAlreadyExists) {
         const avatarPic = await cloudinary.uploader.upload(barberImage, {
