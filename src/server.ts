@@ -4,6 +4,7 @@ import express from 'express'
 import { cloudinaryConfigs } from './configs/cloudinary'
 import { router } from './router'
 import { errorHandler } from './middlewares/errorHandler'
+import cors from 'cors'
 import './configs/multer'
 
 const PORT = process.env.PORT || 3001
@@ -13,6 +14,8 @@ const server = express()
 dotenv.config()
 
 cloudinaryConfigs()
+
+server.use(cors())
 
 server.use(express.json())
 
